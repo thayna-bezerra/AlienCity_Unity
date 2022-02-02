@@ -5,8 +5,10 @@ using UnityEngine.UI;
 
 public class PlayerMove : MonoBehaviour
 {
-    public Text textoRodape; 
-    
+    public Text textoRodape;
+
+    public bool isActive;
+
     public Animator AnimacoesPlayer;
 
     private void Start()
@@ -20,14 +22,18 @@ public class PlayerMove : MonoBehaviour
         {
             Touch touch = Input.GetTouch(0);
 
+            isActive = true;
+
             if(touch.phase == TouchPhase.Moved)
             {
-                transform.position += (Vector3)touch.deltaPosition;
+                transform.position += (Vector3)touch.deltaPosition/100;
                 textoRodape.gameObject.SetActive(true);
-                AnimacoesPlayer.Play("Jump"); //usar bool isActive para verificar se o player está ou não sendo tocando, para assim tocar a anim
             }
-
-            else { textoRodape.gameObject.SetActive(false); }
         }
+
+        else { textoRodape.gameObject.SetActive(false); isActive = false; }
+
+        if (isActive == true) { AnimacoesPlayer.Play("jump"); }
+        else if (isActive == false) { AnimacoesPlayer.Play("idle"); }
     }
 }
