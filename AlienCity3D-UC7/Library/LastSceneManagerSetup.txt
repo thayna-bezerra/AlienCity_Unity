@@ -1,5 +1,5 @@
 sceneSetups:
-- path: Assets/Cenas/Teste01_ToqueBasico.unity
+- path: Assets/Cenas/Teste02_MovBasica.unity
   isLoaded: 1
   isActive: 1
   isSubScene: 0
