@@ -1,5 +1,5 @@
 sceneSetups:
-- path: Assets/Cenas/Teste02_MovBasica.unity
+- path: Assets/Cenas/Menu.unity
   isLoaded: 1
   isActive: 1
   isSubScene: 0

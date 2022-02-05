@@ -7,10 +7,17 @@ public class Armadilhas : MonoBehaviour
     //publico:  tempo de dano e quantidade de dano
 
     public PlayerController pc;
-
-    public float maxTimeToDamage = 1;
-    private float currentTimeToDamage = 0;
     private bool isColliding = false;
+    
+    private float danoTempoAtual = 0;
+
+    [Header("Tempo entres os DANOS")]
+    [Space]
+    public float danoTempoMax = 1;
+
+    [Header("Quantidade de DANO")]
+    [Space]
+    public int dano = 1;
 
     void Start()
     {
@@ -21,13 +28,12 @@ public class Armadilhas : MonoBehaviour
     {
         if (isColliding)
         {
-            if (currentTimeToDamage >= maxTimeToDamage)
+            if (danoTempoAtual >= danoTempoMax)
             {
                 DamagePlayer();
-                currentTimeToDamage = 0;
+                danoTempoAtual = 0;
             }
-            else
-                currentTimeToDamage += Time.deltaTime;
+            else  danoTempoAtual += Time.deltaTime;
         }
 
     }
@@ -49,50 +55,6 @@ public class Armadilhas : MonoBehaviour
 
     void DamagePlayer()
     {
-        pc.lifePlayer--;
+        pc.energiaAtual-=dano;
     }
-
-
-    /* public Slider vidaPlayer;
-     public float maxTimeToDamage = 1;
-     private float currentTimeToDamage = 0;
-     private bool isColliding = false;
-
-     void Update()
-     {
-         if (isColliding)
-         {
-             if (currentTimeToDamage >= maxTimeToDamage)
-             {
-                 DamagePlayer();
-                 currentTimeToDamage = 0;
-             }
-             else
-                 currentTimeToDamage += Time.deltaTime;
-         }
-     }
-
-     private void OnTriggerEnter(Collider other)
-     {
-         if (other.tag == "Player")
-         {
-             isColliding = true;
-         }
-
-
-     }
-
-     void OnTriggerExit(Collider other)
-     {
-         if (other.tag == "Player")
-         {
-             isColliding = false;
-         }
-     }
-
-     void DamagePlayer()
-     {
-         vidaPlayer.value--;
-     }
- */
 }

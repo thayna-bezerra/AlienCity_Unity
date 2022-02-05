@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 [RequireComponent(typeof(CharacterController))]
 public class PlayerController : MonoBehaviour 
@@ -15,20 +17,60 @@ public class PlayerController : MonoBehaviour
 	private bool jump = false;
 	public Joystick joystick;
 
-	//[Space(10)]
+	[Space(10)]
 
-	public int lifePlayer = 5;
+	[Header("ENERGIA")]
+	public Slider barraDeEnergia;
 
+	public int energiaPlayer = 5;
+	public int energiaAtual;
+	[Space]
+
+	[Header("VIDA")]
+	public int VidaPlayer;
+	public GameObject[] VidasHUD = new GameObject[3];
+
+	[Space]
+	[Header("Condição Vitória/Derrota")]
+	public int isVictory = 0; //0 - perdeu // 1-ganhou
 
 	void Start()
 	{
 		cc = GetComponent<CharacterController> ();
 		anim = GetComponent<Animator>();
 		anim.SetTrigger("Parado");
+
+		VidaPlayer = 3;
+		VidaPlayer = PlayerPrefs.GetInt("VidaOnLoad");
+
+		energiaAtual = energiaPlayer;
+		barraDeEnergia.maxValue = energiaPlayer;
+
 	}
 
 	void Update()
 	{
+		PlayerPrefs.SetInt("Victory", isVictory);
+
+        if (energiaAtual == 0)
+        {
+			energiaAtual = 5;
+			VidaPlayer--;
+			
+			PlayerPrefs.SetInt("VidaOnLoad", VidaPlayer);
+
+
+			SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+
+			if(VidaPlayer == 0)
+            {
+				isVictory = 0;
+				SceneManager.LoadScene("Terminou");
+			}
+		}
+
+		barraDeEnergia.value = energiaAtual;
+
 		Vector3 a = Input.GetAxis ("Vertical") * transform.TransformDirection (Vector3.forward) * MoveSpeed;
 		transform.Rotate (new Vector3 (0, Input.GetAxis ("Horizontal") * RotationSpeed * Time.deltaTime, 0));
 
@@ -50,7 +92,9 @@ public class PlayerController : MonoBehaviour
 		}
 		move += gravidade;
 		cc.Move (move* Time.deltaTime);
-		Anima ();
+
+		Anima();
+		HUDdisplay();
 	}
 	 
 	void Anima()
@@ -67,5 +111,49 @@ public class PlayerController : MonoBehaviour
 	{
 		anim.SetTrigger("Pula");
 		jump = true;
+	}
+
+	public void resetarPlayerPrefs()
+	{
+		PlayerPrefs.DeleteAll();
+		VidaPlayer = 3;
+	}
+	private void OnTriggerEnter(Collider other)
+	{
+		if (other.tag == "pedra")
+		{
+			isVictory = 1;
+			SceneManager.LoadScene("Terminou");
+		}
+	}
+
+	public void HUDdisplay()
+	{
+		switch (VidaPlayer)
+		{
+			case 3:
+				VidasHUD[0].SetActive(false); //com uma vida desativado
+				VidasHUD[1].SetActive(false); //com duas vidas desativado
+				VidasHUD[2].SetActive(true);  //com 3 vidas
+				break; 
+
+			case 2:
+				VidasHUD[0].SetActive(false);
+				VidasHUD[1].SetActive(true);
+				VidasHUD[2].SetActive(false);
+				break;
+
+			case 1:
+				VidasHUD[0].SetActive(true);
+				VidasHUD[1].SetActive(false);
+				VidasHUD[2].SetActive(false);
+				break;
+
+			default:
+				VidasHUD[0].SetActive(false);
+				VidasHUD[1].SetActive(false);
+				VidasHUD[2].SetActive(false);
+				break;
+		}
 	}
 }
