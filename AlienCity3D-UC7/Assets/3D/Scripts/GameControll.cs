@@ -40,6 +40,7 @@ public class GameControll : MonoBehaviour
 
     public void segundoGame()
     {
+        PlayerPrefs.DeleteAll();
         SceneManager.LoadScene("Teste02_MovBasica");
     }
 
